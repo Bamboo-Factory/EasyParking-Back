@@ -9,5 +9,6 @@ namespace EasyParking.Core.Interfaces
         Task<IEnumerable<User>> GetByRoleAsync(UserRole role);
         Task<bool> EmailExistsAsync(string email);
         Task<bool> LicensePlateExistsAsync(string licensePlate);
+        Task<User?> GetUserByEmailAsync(string email);
     }
 } 

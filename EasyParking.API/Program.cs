@@ -6,6 +6,23 @@ using EasyParking.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using EasyParking.Application.Mappings;
 
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    foreach (var line in File.ReadAllLines(envPath))
+    {
+        Console.WriteLine($"Line: {line}");
+        var parts = line.Split('=', 2);
+        if (parts.Length == 2)
+        {
+            Environment.SetEnvironmentVariable(parts[0], parts[1]);
+        }
+    }
+}
+
+Console.WriteLine($"Env path: {envPath}");
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,12 +35,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configurar Entity Framework
-builder.Services.AddDbContext<EasyParkingDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // AutoMapper Configuration
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// Configurar Entity Framework
+var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+var connectionString = rawConnectionString
+    .Replace("${DB_SERVER}", Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost,1433")
+    .Replace("${DB_NAME}", Environment.GetEnvironmentVariable("DB_NAME") ?? "EasyParkingDb")
+    .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER") ?? "sa")
+    .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "Passw0rd");
+
+Console.WriteLine($"Connection string: {connectionString}");
+Console.WriteLine($"DB Server: {Environment.GetEnvironmentVariable("DB_SERVER")}");
+
+builder.Services.AddDbContext<EasyParkingDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // Registrar repositorios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -86,6 +113,7 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
 
 app.Run();
 

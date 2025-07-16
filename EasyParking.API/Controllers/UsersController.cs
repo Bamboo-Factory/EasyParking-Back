@@ -2,6 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using EasyParking.Application.Interfaces;
 using EasyParking.Application.DTOs;
 using EasyParking.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using EasyParking.Core.Entities;
+using EasyParking.Core.Interfaces;
+using EasyParking.Infrastructure.Data;
+using System.Threading.Tasks;
 
 namespace EasyParking.API.Controllers
 {
@@ -157,6 +162,22 @@ namespace EasyParking.API.Controllers
             {
                 var exists = await _userService.LicensePlateExistsAsync(licensePlate);
                 return Ok(exists);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error interno del servidor", error = ex.Message });
+            }
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<ActionResult<AuthenticatedUserResponseDto>> Authenticate([FromBody] AuthenticateUserDto dto)
+        {
+            try
+            {
+                var user = await _userService.ValidateUserCredentialsAsync(dto.Email, dto.Password);
+                if (user == null)
+                    return Unauthorized();
+                return Ok(user);
             }
             catch (Exception ex)
             {

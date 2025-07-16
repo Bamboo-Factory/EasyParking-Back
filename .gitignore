@@ -49,3 +49,11 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+
+# User secrets
+EasyParking.API/Properties/launchSettings.json

@@ -35,5 +35,10 @@ namespace EasyParking.Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(u => u.LicensePlate == licensePlate && u.IsActive);
         }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email && u.IsActive);
+        }
     }
 } 

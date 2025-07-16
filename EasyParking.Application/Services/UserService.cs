@@ -105,6 +105,25 @@ namespace EasyParking.Application.Services
             return await _userRepository.LicensePlateExistsAsync(licensePlate);
         }
 
+        public async Task<AuthenticatedUserResponseDto?> ValidateUserCredentialsAsync(string email, string password)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            if (user == null || string.IsNullOrEmpty(user.PasswordHash))
+                return null;
+
+            var inputHash = ComputeSha256Hash(password);
+            if (user.PasswordHash == inputHash || user.PasswordHash == password)
+            {
+                return new AuthenticatedUserResponseDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Role = user.Role.ToString()
+                };
+            }
+            return null;
+        }
+
         private static UserDto MapToDto(User user)
         {
             return new UserDto
@@ -126,6 +145,16 @@ namespace EasyParking.Application.Services
             using var sha256 = SHA256.Create();
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hashedBytes);
+        }
+
+        private static string ComputeSha256Hash(string rawData)
+        {
+            using (var sha256 = System.Security.Cryptography.SHA256.Create())
+            {
+                var bytes = System.Text.Encoding.UTF8.GetBytes(rawData);
+                var hashBytes = sha256.ComputeHash(bytes);
+                return BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLower();
+            }
         }
     }
 } 

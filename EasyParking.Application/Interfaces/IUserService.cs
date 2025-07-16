@@ -13,5 +13,6 @@ namespace EasyParking.Application.Interfaces
         Task<bool> UserExistsAsync(int id);
         Task<bool> EmailExistsAsync(string email);
         Task<bool> LicensePlateExistsAsync(string licensePlate);
+        Task<AuthenticatedUserResponseDto?> ValidateUserCredentialsAsync(string email, string password);
     }
 } 

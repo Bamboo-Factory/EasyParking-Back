@@ -2,11 +2,32 @@
 # Configurado específicamente para Lima, Perú
 
 param(
-    [string]$ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=EasyParkingDb;Trusted_Connection=true;MultipleActiveResultSets=true",
+    [string]$ConnectionString = "Server=(localdb)\mssqllocaldb;Database=EasyParkingDb;Trusted_Connection=true;MultipleActiveResultSets=true",
     [switch]$SkipMigrations = $false,
     [switch]$SkipSeedData = $false,
     [switch]$UpdateToLima = $false
 )
+
+# Leer variables del archivo .env si existe y construir la cadena de conexión si no se pasa por parámetro
+$envPath = ".env"
+if (-not $PSBoundParameters.ContainsKey('ConnectionString')) {
+    if (Test-Path $envPath) {
+        Get-Content $envPath | ForEach-Object {
+            if ($_ -match "^\s*([^#][^=]*)=(.*)$") {
+                $key = $matches[1].Trim()
+                $value = $matches[2].Trim()
+                [System.Environment]::SetEnvironmentVariable($key, $value)
+            }
+        }
+        $dbServer = $env:DB_SERVER
+        $dbName = $env:DB_NAME
+        $dbUser = $env:DB_USER
+        $dbPassword = $env:DB_PASSWORD
+        if ($dbServer -and $dbName -and $dbUser -and $dbPassword) {
+            $ConnectionString = "Server=$dbServer;Database=$dbName;User Id=$dbUser;Password=$dbPassword;MultipleActiveResultSets=true"
+        }
+    }
+}
 
 Write-Host "🚀 Configurando base de datos para EasyParking - Lima, Perú" -ForegroundColor Green
 Write-Host ""
