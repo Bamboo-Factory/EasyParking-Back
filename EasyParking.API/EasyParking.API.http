@@ -1,0 +1,42 @@
+@EasyParking.API_HostAddress = http://localhost:5041
+
+GET {{EasyParking.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+# Crear una nueva reserva
+POST {{EasyParking.API_HostAddress}}/api/reservations
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "parkingId": 1,
+  "startTime": "2024-01-15T10:00:00Z",
+  "endTime": "2024-01-15T14:00:00Z",
+  "totalAmount": 40.00
+}
+
+###
+
+# Obtener todas las reservas
+GET {{EasyParking.API_HostAddress}}/api/reservations
+Accept: application/json
+
+###
+
+# Obtener reserva por ID
+GET {{EasyParking.API_HostAddress}}/api/reservations/1
+Accept: application/json
+
+###
+
+# Obtener reservas por usuario
+GET {{EasyParking.API_HostAddress}}/api/reservations/user/1
+Accept: application/json
+
+###
+
+# Obtener reservas por estacionamiento
+GET {{EasyParking.API_HostAddress}}/api/reservations/parking/1
+Accept: application/json

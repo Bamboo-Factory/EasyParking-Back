@@ -1,0 +1,51 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Oo]bj/
+[Bb]in/
+*.dll
+*.exe
+*.log
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio files
+.vs/
+.vscode/
+*.dbmdl
+*.pdb
+
+# ASP.NET Core files
+appsettings.*.json
+appsettings.json
+
+# NuGet packages
+*.nupkg
+.nuget/
+packages/
+*.snupkg
+
+# Entity Framework
+migrations/
+
+# Rider files
+.idea/
+
+# Others
+*.swp
+*.bak
+*.tmp
+*.cache
+*.config
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
