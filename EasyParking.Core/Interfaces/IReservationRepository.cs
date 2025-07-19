@@ -9,6 +9,7 @@ namespace EasyParking.Core.Interfaces
         Task<IEnumerable<Reservation>> GetByStatusAsync(ReservationStatus status);
         Task<IEnumerable<Reservation>> GetActiveReservationsAsync();
         Task<IEnumerable<Reservation>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Reservation>> GetAllWithDetailsAsync();
         Task<Reservation?> GetWithDetailsAsync(int id);
         Task<bool> HasConflictingReservationAsync(int parkingSpaceId, DateTime startTime, DateTime endTime);
         Task UpdateStatusAsync(int reservationId, ReservationStatus status);

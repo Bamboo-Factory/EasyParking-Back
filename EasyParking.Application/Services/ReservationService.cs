@@ -27,7 +27,7 @@ namespace EasyParking.Application.Services
 
         public async Task<IEnumerable<ReservationDto>> GetAllReservationsAsync()
         {
-            var reservations = await _reservationRepository.GetAllAsync();
+            var reservations = await _reservationRepository.GetAllWithDetailsAsync();
             return reservations.Select(MapToDto);
         }
 
@@ -78,7 +78,7 @@ namespace EasyParking.Application.Services
             }
             else
             {
-                reservations = await _reservationRepository.GetAllAsync();
+                reservations = await _reservationRepository.GetAllWithDetailsAsync();
             }
 
             return reservations.Select(MapToDto);
@@ -98,6 +98,12 @@ namespace EasyParking.Application.Services
             if (parking == null)
             {
                 throw new NotFoundException("Estacionamiento", createReservationDto.ParkingId);
+            }
+
+            // Validar que hay espacios disponibles
+            if (parking.AvailableSpaces <= 0)
+            {
+                throw new DomainException("No hay espacios disponibles en este estacionamiento.");
             }
 
             // Buscar un espacio disponible en el estacionamiento
@@ -138,6 +144,11 @@ namespace EasyParking.Application.Services
             };
 
             var createdReservation = await _reservationRepository.AddAsync(reservation);
+
+            // Actualizar la cantidad de espacios disponibles en el parking
+            var newAvailableSpaces = parking.AvailableSpaces - 1;
+            await _parkingRepository.UpdateAvailableSpacesAsync(createReservationDto.ParkingId, newAvailableSpaces);
+
             return MapToDto(createdReservation);
         }
 

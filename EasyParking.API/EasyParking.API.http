@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ###
 
-# Obtener todas las reservas
+# Obtener todas las reservas (incluye detalles de Parking y ParkingSpace)
 GET {{EasyParking.API_HostAddress}}/api/reservations
 Accept: application/json
 
@@ -40,3 +40,25 @@ Accept: application/json
 # Obtener reservas por estacionamiento
 GET {{EasyParking.API_HostAddress}}/api/reservations/parking/1
 Accept: application/json
+
+###
+
+# Crear un nuevo estacionamiento
+POST {{EasyParking.API_HostAddress}}/api/parkings
+Content-Type: application/json
+
+{
+  "name": "Estacionamiento Centro",
+  "address": "Av. Principal 123",
+  "city": "Lima",
+  "postalCode": "15001",
+  "latitude": -12.0464,
+  "longitude": -77.0428,
+  "totalSpaces": 50,
+  "hourlyRate": 10.00,
+  "dailyRate": 80.00,
+  "description": "Estacionamiento en el centro de la ciudad",
+  "imageUrl": "https://example.com/parking-image.jpg"
+}
+
+###

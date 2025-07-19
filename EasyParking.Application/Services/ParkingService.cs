@@ -56,11 +56,13 @@ namespace EasyParking.Application.Services
             return _mapper.Map<IEnumerable<ParkingDto>>(parkings);
         }
 
-        public async Task<ParkingDto> CreateAsync(ParkingDto parkingDto)
+        public async Task<ParkingDto> CreateAsync(CreateParkingDto createParkingDto)
         {
-            var parking = _mapper.Map<Parking>(parkingDto);
+            var parking = _mapper.Map<Parking>(createParkingDto);
             parking.CreatedAt = DateTime.UtcNow;
             parking.IsActive = true;
+            parking.AvailableSpaces = parking.TotalSpaces;
+            parking.Status = ParkingStatus.Active;
 
             await _parkingRepository.AddAsync(parking);
             await _unitOfWork.SaveChangesAsync();

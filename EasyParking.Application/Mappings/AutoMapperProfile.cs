@@ -28,6 +28,13 @@ namespace EasyParking.Application.Mappings
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.IsActive, opt => opt.Ignore());
 
+            CreateMap<CreateParkingDto, Parking>()
+                .ForMember(dest => dest.Status, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+                .ForMember(dest => dest.AvailableSpaces, opt => opt.Ignore());
+
             // Mapeos de ParkingSpace
             CreateMap<ParkingSpace, ParkingSpaceDto>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))

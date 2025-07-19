@@ -120,11 +120,11 @@ namespace EasyParking.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ParkingDto>> Create(ParkingDto parkingDto)
+        public async Task<ActionResult<ParkingDto>> Create(CreateParkingDto createParkingDto)
         {
             try
             {
-                var createdParking = await _parkingService.CreateAsync(parkingDto);
+                var createdParking = await _parkingService.CreateAsync(createParkingDto);
                 return CreatedAtAction(nameof(GetById), new { id = createdParking.Id }, createdParking);
             }
             catch (DomainException ex)

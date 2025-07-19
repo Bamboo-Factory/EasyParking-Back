@@ -13,7 +13,11 @@ namespace EasyParking.Infrastructure.Repositories
 
         public async Task<IEnumerable<Reservation>> GetByUserIdAsync(int userId)
         {
-            return await _dbSet.Where(r => r.UserId == userId && r.IsActive).ToListAsync();
+            return await _dbSet
+                .Include(r => r.User)
+                .Include(r => r.Parking)
+                .Include(r => r.ParkingSpace)
+                .Where(r => r.UserId == userId && r.IsActive).ToListAsync();
         }
 
         public async Task<IEnumerable<Reservation>> GetByParkingIdAsync(int parkingId)
@@ -45,6 +49,16 @@ namespace EasyParking.Infrastructure.Repositories
                 .Include(r => r.Parking)
                 .Include(r => r.ParkingSpace)
                 .FirstOrDefaultAsync(r => r.Id == id && r.IsActive);
+        }
+
+        public async Task<IEnumerable<Reservation>> GetAllWithDetailsAsync()
+        {
+            return await _dbSet
+                .Include(r => r.User)
+                .Include(r => r.Parking)
+                .Include(r => r.ParkingSpace)
+                .Where(r => r.IsActive)
+                .ToListAsync();
         }
 
         public async Task<bool> HasConflictingReservationAsync(int parkingSpaceId, DateTime startTime, DateTime endTime)

@@ -39,18 +39,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 // Configurar Entity Framework
-var rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-var connectionString = rawConnectionString
-    .Replace("${DB_SERVER}", Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost,1433")
-    .Replace("${DB_NAME}", Environment.GetEnvironmentVariable("DB_NAME") ?? "EasyParkingDb")
-    .Replace("${DB_USER}", Environment.GetEnvironmentVariable("DB_USER") ?? "sa")
-    .Replace("${DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "Passw0rd");
-
-Console.WriteLine($"Connection string: {connectionString}");
-Console.WriteLine($"DB Server: {Environment.GetEnvironmentVariable("DB_SERVER")}");
-
 builder.Services.AddDbContext<EasyParkingDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Registrar repositorios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
